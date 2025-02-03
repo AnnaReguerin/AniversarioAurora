@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Presença</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+            background: url('ebd35ea7-5472-45e4-8252-7dba601a8e79.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+        }
+        #container {
+            max-width: 450px;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(157, 130, 240, 0.5);
+        }
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #7154c7;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #7154c7;
+        }
+        .export-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            background: rgba(106, 95, 230, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+        .export-icon:hover {
+            background: #7154c7;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h2>Confirme sua Presença</h2>
+        <div id="inputs-container">
+            <div class="input-group">
+                <input type="text" class="name-input" placeholder="Digite seu nome">
+                <input type="text" class="plate-input" placeholder="Digite a placa do carro">
+            </div>
+        </div>
+        <button onclick="addInput()">Confirmar outros</button>
+        <button onclick="confirmPresence()">Confirmar presenças</button>
+    </div>
+    <span class="export-icon" onclick="exportPDF()">📄</span>
+    
+    <script>
+        let attendees = [];
+        
+        function addInput() {
+            const container = document.getElementById("inputs-container");
+            const div = document.createElement("div");
+            div.classList.add("input-group");
+            div.innerHTML = '<input type="text" class="name-input" placeholder="Digite seu nome">' +
+                            '<input type="text" class="plate-input" placeholder="Digite a placa do carro">';
+            container.appendChild(div);
+        }
+        
+        function confirmPresence() {
+            const nameInputs = document.querySelectorAll(".name-input");
+            const plateInputs = document.querySelectorAll(".plate-input");
+            attendees = [];
+            
+            nameInputs.forEach((input, index) => {
+                const name = input.value.trim();
+                const plate = plateInputs[index].value.trim();
+                if (name !== "" && plate !== "") {
+                    attendees.push({ name, plate });
+                }
+            });
+            alert("Presenças confirmadas!");
+        }
+        
+        function exportPDF() {
+            const password = prompt("Digite a senha para exportar o PDF:");
+            if (password === "110769") {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.text("Lista de Presença", 10, 10);
+                attendees.forEach((attendee, index) => {
+                    doc.text(`${index + 1}. Nome: ${attendee.name} - Placa: ${attendee.plate}`, 10, 20 + index * 10);
+                });
+                doc.save("Lista_de_Presenca.pdf");
+            } else {
+                alert("Senha incorreta!");
+            }
+        }
+    </script>
+</body>
+</html>
